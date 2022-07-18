@@ -21,8 +21,21 @@ class V1::LoginController < ApplicationController
   end
 
   def create
-    p register_params
-    p params
+    users = User.all
+    user_present = false
+    users.each do |user|
+      next unless user.name == register_params[:name]
+
+      render json: {
+        message: 'Error saving user to database',
+        error: 'User already registered'
+      }
+      user_present = true
+      break
+    end
+
+    return if user_present
+
     user = User.create(register_params)
     if user.new_record?
       render json: {
