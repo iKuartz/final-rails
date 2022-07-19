@@ -6,8 +6,13 @@ class V1::LoginController < ApplicationController
     users.each do |user|
       next unless user.name == name
 
+      payload = {
+        name:
+      }
+      secret = Rails.application.secret_key_base.to_s
+      token = JWT.encode payload, secret, 'HS256'
       render json: {
-        message: 'Login successful.'
+        token:
       }
       user_present = true
       break
