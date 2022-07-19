@@ -1,0 +1,45 @@
+---
+openapi: 3.0.1
+info:
+  title: API V1
+  version: v1
+paths:
+  "/v1/login":
+    post:
+      summary: login user
+      tags:
+      - Login
+      parameters: []
+      responses:
+        '200':
+          description: successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                required:
+                - token
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+              required:
+              - name
+  "/v1/register":
+    post:
+      summary: register user
+      responses:
+        '200':
+          description: registration successful
+servers:
+- url: https://{defaultHost}
+  variables:
+    defaultHost:
+      default: 127.0.0.1

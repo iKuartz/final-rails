@@ -4,20 +4,23 @@ RSpec.describe 'v1/login', type: :request do
 
   path '/v1/login' do
 
-    get('login user') do
+    post('login user') do
       tags 'Login'
       consumes 'application/json'
-      parameter name: :user, in: :body, schema:{
+      produces 'application/json'
+      parameter name: :user, in: :body, schema: {
         type: :object,
         properties: {
-          name: { type: :string },
+          name: { type: :string }
         },
-        required: ['name']
+        required: [ 'name' ]
       }
-
       response(200, 'successful') do
-        let(:user)
-
+        schema type: :object,
+          properties: {
+            token: { type: :string },
+          },
+        required: [ 'token' ]
         run_test!
       end
     end
@@ -25,9 +28,8 @@ RSpec.describe 'v1/login', type: :request do
 
   path '/v1/register' do
 
-    post('create login') do
-      response(200, 'successful') do
-
+    post('register user') do
+      response(200, 'registration successful') do
         after do |example|
           example.metadata[:response][:content] = {
             'application/json' => {
