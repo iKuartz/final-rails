@@ -4,12 +4,17 @@ info:
   title: API V1
   version: v1
 paths:
-  "/v1/login":
-    post:
+  "/v1/login/{name}":
+    get:
       summary: login user
       tags:
       - Login
-      parameters: []
+      parameters:
+      - name: name
+        in: path
+        required: true
+        schema:
+          type: string
       responses:
         '200':
           description: successful
@@ -22,16 +27,6 @@ paths:
                     type: string
                 required:
                 - token
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                name:
-                  type: string
-              required:
-              - name
   "/v1/register":
     post:
       summary: register user
@@ -39,7 +34,7 @@ paths:
         '200':
           description: registration successful
 servers:
-- url: https://{defaultHost}
+- url: http://{defaultHost}
   variables:
     defaultHost:
-      default: 127.0.0.1
+      default: 127.0.0.1:3000

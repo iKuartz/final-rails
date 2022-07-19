@@ -1,20 +1,15 @@
 require 'swagger_helper'
 
-RSpec.describe 'v1/login', type: :request do
+RSpec.describe 'Login', type: :request do
 
-  path '/v1/login' do
+  path '/v1/login/{name}' do
 
-    post('login user') do
+    get('login user') do
       tags 'Login'
       consumes 'application/json'
       produces 'application/json'
-      parameter name: :user, in: :body, schema: {
-        type: :object,
-        properties: {
-          name: { type: :string }
-        },
-        required: [ 'name' ]
-      }
+      parameter name: :name, in: :path, type: :string 
+
       response(200, 'successful') do
         schema type: :object,
           properties: {
