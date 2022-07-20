@@ -27,12 +27,66 @@ paths:
                     type: string
                 required:
                 - token
+        '404':
+          description: error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  error:
+                    type: string
+                required:
+                - message
+                - error
   "/v1/register":
     post:
       summary: register user
+      tags:
+      - Register
+      parameters: []
       responses:
         '200':
-          description: registration successful
+          description: successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                required:
+                - message
+        '500':
+          description: error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  error:
+                    oneOf:
+                    - type: string
+                    - type: array
+                      items:
+                        type: string
+                required:
+                - message
+                - error
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+              required:
+              - name
 servers:
 - url: http://{defaultHost}
   variables:
