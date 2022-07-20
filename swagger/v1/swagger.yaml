@@ -83,8 +83,11 @@ paths:
             schema:
               type: object
               properties:
-                name:
-                  type: string
+                user:
+                  type: object
+                  properties:
+                    name:
+                      type: string
               required:
               - name
 servers:
