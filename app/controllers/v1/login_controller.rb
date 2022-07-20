@@ -21,7 +21,8 @@ class V1::LoginController < ApplicationController
     return if user_present
 
     render json: {
-      message: 'User not present'
+      message: 'Error logging in',
+      error: 'User not present'
     }, status: 404
   end
 
