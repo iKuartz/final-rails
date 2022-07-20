@@ -9,7 +9,11 @@ RSpec.describe 'Register', type: :request do
       parameter name: :name, in: :body, schema: {
         type: :object,
         properties: {
-          name: { type: :string }
+          user: { type: :object,
+              properties: {
+              name: {type: :string}
+            }
+          }
         },
         required: ['name']
       }
