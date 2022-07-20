@@ -13,7 +13,7 @@ class V1::LoginController < ApplicationController
       token = JWT.encode payload, secret, 'HS256'
       render json: {
         token:
-      }
+      }, status: 200
       user_present = true
       break
     end
@@ -22,7 +22,7 @@ class V1::LoginController < ApplicationController
 
     render json: {
       message: 'User not present'
-    }
+    }, status: 404
   end
 
   def create
@@ -34,7 +34,7 @@ class V1::LoginController < ApplicationController
       render json: {
         message: 'Error saving user to database',
         error: 'User already registered'
-      }
+      }, status: 500
       user_present = true
       break
     end
@@ -46,11 +46,11 @@ class V1::LoginController < ApplicationController
       render json: {
         message: 'Error saving user to database',
         error: user.errors[:name]
-      }
+      }, status: 500
     else
       render json: {
         message: 'User Created Successfully'
-      }
+      }, status: 200
     end
   end
 
