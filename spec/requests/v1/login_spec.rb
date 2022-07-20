@@ -16,6 +16,16 @@ RSpec.describe 'Login', type: :request do
                required: ['token']
         run_test!
       end
+
+      response(404, 'error') do
+        schema type: :object,
+               properties: {
+                 message: { type: :string },
+                 error: { type: :string }
+               },
+               required: %w[message error]
+        run_test!
+      end
     end
   end
 end
