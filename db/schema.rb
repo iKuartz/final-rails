@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_07_21_195855) do
+ActiveRecord::Schema[7.0].define(version: 2022_07_21_215506) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -33,6 +33,8 @@ ActiveRecord::Schema[7.0].define(version: 2022_07_21_195855) do
     t.integer "rooms_free"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "hotel_id", null: false
+    t.index ["hotel_id"], name: "index_available_on_dates_on_hotel_id"
   end
 
   create_table "features", force: :cascade do |t|
@@ -52,11 +54,11 @@ ActiveRecord::Schema[7.0].define(version: 2022_07_21_195855) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "feature_id", null: false
-    t.bigint "available_on_date_id", null: false
     t.bigint "address_id", null: false
+    t.bigint "user_id", null: false
     t.index ["address_id"], name: "index_hotels_on_address_id"
-    t.index ["available_on_date_id"], name: "index_hotels_on_available_on_date_id"
     t.index ["feature_id"], name: "index_hotels_on_feature_id"
+    t.index ["user_id"], name: "index_hotels_on_user_id"
   end
 
   create_table "reservations", force: :cascade do |t|
@@ -76,9 +78,10 @@ ActiveRecord::Schema[7.0].define(version: 2022_07_21_195855) do
     t.datetime "updated_at", null: false
   end
 
+  add_foreign_key "available_on_dates", "hotels"
   add_foreign_key "hotels", "addresses"
-  add_foreign_key "hotels", "available_on_dates"
   add_foreign_key "hotels", "features"
+  add_foreign_key "hotels", "users"
   add_foreign_key "reservations", "hotels"
   add_foreign_key "reservations", "users"
 end
