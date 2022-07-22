@@ -1,12 +1,9 @@
 require 'swagger_helper'
-
+# rubocop:disable Metrics/BlockLength
 RSpec.describe 'v1/hotels', type: :request do
-
   path '/v1/hotels' do
-
     get('list hotels') do
       response(200, 'successful') do
-
         after do |example|
           example.metadata[:response][:content] = {
             'application/json' => {
@@ -26,25 +23,26 @@ RSpec.describe 'v1/hotels', type: :request do
         type: :object,
         properties: {
           hotel: { type: :object,
-                  properties: {
-                    room: { type: :boolean },
-                    pool: { type: :boolean },
-                    bar: { type: :boolean },
-                    air_conditioning: { type: :boolean },
-                    tv: { type: :boolean },
-                    gym: { type: :boolean },
-                    country: { type: :string },
-                    state: { type: :string },
-                    city: { type: :string },
-                    neighbourhood: { type: :string },
-                    street: { type: :string },
-                    number: { type: :integer },
-                    complement: { type: :string },
-                    name: { type: :string },
-                    description: { type: :string }
-                  } }
+                   properties: {
+                     room: { type: :boolean },
+                     pool: { type: :boolean },
+                     bar: { type: :boolean },
+                     air_conditioning: { type: :boolean },
+                     tv: { type: :boolean },
+                     gym: { type: :boolean },
+                     country: { type: :string },
+                     state: { type: :string },
+                     city: { type: :string },
+                     neighbourhood: { type: :string },
+                     street: { type: :string },
+                     number: { type: :integer },
+                     complement: { type: :string },
+                     name: { type: :string },
+                     description: { type: :string }
+                   } }
         },
-        required: [:room, :pool, :bar, :air_conditioning, :tv, :gym, :country, :state, :city, :neighbourhood, :street, :number, :name, :description]
+        required: %i[room pool bar air_conditioning tv gym country state city neighbourhood street
+                     number name description]
       }
       response(200, 'successful') do
         schema type: :object,
@@ -57,3 +55,4 @@ RSpec.describe 'v1/hotels', type: :request do
     end
   end
 end
+# rubocop:enable Metrics/BlockLength

@@ -5,5 +5,6 @@ class Address < ApplicationRecord
   validates :city, presence: { message: 'City can not be blank' }
   validates :neighbourhood, presence: { message: 'Neighbourhood can not be blank' }
   validates :street, presence: { message: 'Street can not be blank' }
-  validates :number, presence: { message: 'Number can not be blank' }, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
+  validates :number, presence: { message: 'Number can not be blank' },
+                     numericality: { only_integer: true, greater_than_or_equal_to: 0 }
 end
