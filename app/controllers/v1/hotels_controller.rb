@@ -35,38 +35,41 @@ class V1::HotelsController < ApplicationController
                                tv: parameters[:tv], gym: parameters[:gym])
       if feature.new_record?
         render json: {
-          error: 'Unable to save to the database[1x501]'
-        }
-        p feature.errors
+          error: 'Unable to save to the database[1x501]',
+          error_list: feature.errors.full_messages
+        }, status: 500
       else
         address = Address.create(country: parameters[:country], state: parameters[:state], city: parameters[:city],
                                  neighbourhood: parameters[:neighbourhood], street: parameters[:street],
                                  number: parameters[:number], complement: parameters[:complement])
         if address.new_record?
           render json: {
-            error: 'Unable to save to the database[1x502]'
-          }
+            error: 'Unable to save to the database[1x502]',
+            error_list: address.errors.full_messages
+          }, status: 500
           feature.destroy
         else
           hotel = Hotel.create(name: parameters[:name], description: parameters[:description], feature_id: feature.id,
                                address_id: address.id, user_id: user.id)
+          p hotel.errors
           if hotel.new_record?
             render json: {
-              error: 'Unable to save to the database[1x503]'
-            }
+              error: 'Unable to save to the database[1x503]',
+              error_list: hotel.errors.full_messages
+            }, status: 500
             feature.destroy
             address.destroy
           else
             render json: {
               message: 'Hotel created successfully'
-            }
+            }, status: 200
           end
         end
       end
     rescue JWT::DecodeError
       render json: {
         error: 'Invalid Token'
-      }
+      }, status: 500
     end
   end
 end
