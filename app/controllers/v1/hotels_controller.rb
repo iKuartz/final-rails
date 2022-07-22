@@ -48,8 +48,8 @@ class V1::HotelsController < ApplicationController
           }
           feature.destroy
         else
-          hotel = Hotel.create(name: parameters[:name], description: parameters[:description], feature: feature.id,
-                               address: address.id, owner: user.id)
+          hotel = Hotel.create(name: parameters[:name], description: parameters[:description], feature_id: feature.id,
+                               address_id: address.id, user_id: user.id)
           if hotel.new_record?
             render json: {
               error: 'Unable to save to the database[1x503]'
