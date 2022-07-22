@@ -4,10 +4,13 @@ class V1::HotelsController < ApplicationController
     secret = Rails.application.secret_key_base.to_s
     begin
       JWT.decode token, secret, true, { algorithm: 'HS256' }
+      hotels = Hotel.all.as_json(
+        include: { feature: { except: %i[created_at updated_at] },
+                   address: { except: %i[created_at
+                                         updated_at] } }, except: %i[created_at updated_at feature_id address_id]
+      )
       render json: {
-        data: [
-          'Hotel 1'
-        ]
+        data: hotels
       }
     rescue JWT::DecodeError
       render json: {
