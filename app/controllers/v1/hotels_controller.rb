@@ -4,7 +4,7 @@ class V1::HotelsController < ApplicationController
     secret = Rails.application.secret_key_base.to_s
     begin
       JWT.decode token, secret, true, { algorithm: 'HS256' }
-      hotels = Hotel.all.as_json(
+      hotels = Hotel.limit(limit).offset(params[:offset]).as_json(
         include: { feature: { except: %i[created_at updated_at] },
                    address: { except: %i[created_at
                                          updated_at] } }, except: %i[created_at updated_at feature_id address_id]
@@ -19,11 +19,6 @@ class V1::HotelsController < ApplicationController
     end
   end
 
-  def hotels_params
-    params.require(:hotel).permit(:name, :description, :room, :pool, :bar, :air_conditioning, :tv, :gym, :reservation,
-                                  :country, :state, :city, :neighbourhood, :street, :number, :complement)
-  end
-
   def create
     token = params[:token]
     secret = Rails.application.secret_key_base.to_s
@@ -32,7 +27,6 @@ class V1::HotelsController < ApplicationController
       username_from_token = decoded_token[0]['name']
       user = User.where(name: username_from_token).first
       parameters = hotels_params
-      p parameters
       feature = Feature.create(room: parameters[:room], pool: parameters[:pool], bar: parameters[:bar],
                                air_conditioning: parameters[:air_conditioning],
                                tv: parameters[:tv], gym: parameters[:gym])
@@ -74,5 +68,19 @@ class V1::HotelsController < ApplicationController
         error: 'Invalid Token'
       }, status: 500
     end
+  end
+
+  private
+
+  def hotels_params
+    params.require(:hotel).permit(:name, :description, :room, :pool, :bar, :air_conditioning, :tv, :gym, :reservation,
+                                  :country, :state, :city, :neighbourhood, :street, :number, :complement)
+  end
+
+  def limit
+    [
+      params.fetch(:limit, 10).to_i,
+      100
+    ].min
   end
 end
