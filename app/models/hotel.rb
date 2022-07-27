@@ -7,4 +7,6 @@ class Hotel < ApplicationRecord
 
   validates :name, presence: { message: 'Name can\'t be blank' }
   validates :description, presence: { message: 'Description should be given' }, length: { minimum: 20, maximum: 2000 }
+  validates :image, presence: { message: 'Hotel image should be provided.' }
+  has_one_attached :image
 end
