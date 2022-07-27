@@ -1,16 +1,23 @@
 class V1::HotelsController < ApplicationController
   def index
-    token = params[:token]
+    token = request.headers['token']
     secret = Rails.application.secret_key_base.to_s
     begin
       JWT.decode token, secret, true, { algorithm: 'HS256' }
-      hotels = Hotel.limit(limit).offset(params[:offset]).as_json(
-        include: { feature: { except: %i[created_at updated_at] },
-                   address: { except: %i[created_at
-                                         updated_at] } }, except: %i[created_at updated_at feature_id address_id]
-      )
+      hotels = Hotel.includes(image_attachment: :blob).limit(limit).offset(params[:offset])
+      hotels_list = hotels.map do |hotel|
+        image_url = ''
+        image_url = url_for(hotel.image) if hotel.image.attached?
+        hotel.as_json(
+          include: { feature: { except: %i[created_at updated_at] },
+                     address: { except: %i[created_at
+                                           updated_at] } }, except: %i[created_at updated_at feature_id address_id]
+        ).merge(
+          image_path: image_url
+        )
+      end
       render json: {
-        data: hotels
+        data: hotels_list
       }
     rescue JWT::DecodeError
       render json: {
@@ -20,7 +27,7 @@ class V1::HotelsController < ApplicationController
   end
 
   def create
-    token = params[:token]
+    token = request.headers['token']
     secret = Rails.application.secret_key_base.to_s
     begin
       decoded_token = JWT.decode token, secret, true, { algorithm: 'HS256' }
@@ -47,8 +54,7 @@ class V1::HotelsController < ApplicationController
           feature.destroy
         else
           hotel = Hotel.create(name: parameters[:name], description: parameters[:description], feature_id: feature.id,
-                               address_id: address.id, user_id: user.id)
-          p hotel.errors
+                               address_id: address.id, user_id: user.id, image: parameters[:image])
           if hotel.new_record?
             render json: {
               error: 'Unable to save to the database[1x503]',
@@ -74,7 +80,7 @@ class V1::HotelsController < ApplicationController
 
   def hotels_params
     params.require(:hotel).permit(:name, :description, :room, :pool, :bar, :air_conditioning, :tv, :gym, :reservation,
-                                  :country, :state, :city, :neighbourhood, :street, :number, :complement)
+                                  :country, :state, :city, :neighbourhood, :street, :number, :complement, :image)
   end
 
   def limit
