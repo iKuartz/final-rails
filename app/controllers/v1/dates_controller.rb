@@ -1,4 +1,4 @@
-class DatesController < ApplicationController
+class V1::DatesController < ApplicationController
   def index
     render json: {
       status: 'Under Construction'

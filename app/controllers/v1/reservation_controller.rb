@@ -1,4 +1,4 @@
-class ReservationController < ApplicationController
+class V1::ReservationController < ApplicationController
   def index
     render json: {
       status: 'Under Construction'
