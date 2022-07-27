@@ -4,6 +4,83 @@ info:
   title: API V1
   version: v1
 paths:
+  "/v1/hotels":
+    get:
+      summary: list hotels
+      responses:
+        '200':
+          description: successful
+    post:
+      summary: create hotel
+      tags:
+      - Create hotel
+      parameters: []
+      responses:
+        '200':
+          description: successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                required:
+                - message
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                hotel:
+                  type: object
+                  properties:
+                    room:
+                      type: boolean
+                    pool:
+                      type: boolean
+                    bar:
+                      type: boolean
+                    air_conditioning:
+                      type: boolean
+                    tv:
+                      type: boolean
+                    gym:
+                      type: boolean
+                    country:
+                      type: string
+                    state:
+                      type: string
+                    city:
+                      type: string
+                    neighbourhood:
+                      type: string
+                    street:
+                      type: string
+                    number:
+                      type: integer
+                    complement:
+                      type: string
+                    name:
+                      type: string
+                    description:
+                      type: string
+              required:
+              - room
+              - pool
+              - bar
+              - air_conditioning
+              - tv
+              - gym
+              - country
+              - state
+              - city
+              - neighbourhood
+              - street
+              - number
+              - name
+              - description
   "/v1/login/{name}":
     get:
       summary: login user

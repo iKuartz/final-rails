@@ -4,6 +4,6 @@ Rails.application.routes.draw do
   namespace :v1, defaults: { format: 'json' } do
     get '/login/:name', to: 'login#index'
     post '/register', to: 'login#create'
-    resources :hotels, only: [:index]
+    resources :hotels, only: [:index, :create]
   end
 end

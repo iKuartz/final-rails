@@ -1,7 +1,12 @@
-# This file should contain all the record creation needed to seed the database with its default values.
-# The data can then be loaded with the bin/rails db:seed command (or created alongside the database with db:setup).
-#
-# Examples:
-#
-#   movies = Movie.create([{ name: "Star Wars" }, { name: "Lord of the Rings" }])
-#   Character.create(name: "Luke", movie: movies.first)
+user1 = User.create(name:"Ivan")
+user2 = User.create(name:"Saadat")
+feats_hot1 = Feature.create(room: 20, pool: true, bar: true, air_conditioning: true, tv: false, gym: false)
+feats_hot2 = Feature.create(room: 16, pool: false, bar: false, air_conditioning: true, tv: true, gym: true)
+address_hot1 = Address.create(country: "Brazil", state: "Rio de Janeiro", city: "Penedo", neighbourhood: "Centro", street: "Avenida das três cachoeiras", number: 31)
+address_hot2 = Address.create(country: "Pakistan", state: "Gilgid", city: "Skardu", neighbourhood: "Downtown", street: "54th Street", number: 11)
+hotel1 = Hotel.create(user_id: user1.id, name: "Chocolate house Hotel", feature_id: feats_hot1.id, address_id: address_hot1.id, description: "An unforgattable experience for the lovers of chocolate all around the world!" )
+hotel2 = Hotel.create(user_id: user2.id, name: "Peaceful Mountain Hotel", feature_id: feats_hot2.id, address_id: address_hot2.id, description: "Feel the soothing breeze of the mountains and relax in the jewel of Skardu!" )
+hotel3 = Hotel.create(user_id: user1.id, name: "Great Plains Resort", feature_id: feats_hot1.id, address_id: address_hot1.id, description: "Let the wind of the plains feel your heart with soothe in this 5 stars resort." )
+hotel4 = Hotel.create(user_id: user2.id, name: "Canion Wonder", feature_id: feats_hot2.id, address_id: address_hot2.id, description: "In front of the world's greatest canyon, this hotel is for the wild adventurers." )
+hotel5 = Hotel.create(user_id: user1.id, name: "Say Cheese Hotel", feature_id: feats_hot1.id, address_id: address_hot1.id, description: "For those who like cheese, this hotel is also a famous cheese factory." )
+hotel6 = Hotel.create(user_id: user2.id, name: "Lovely huts Hotel", feature_id: feats_hot2.id, address_id: address_hot2.id, description: "This is a charming retreat from the noisy and busy life of the city." )
