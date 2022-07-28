@@ -1,3 +1,4 @@
+# rubocop:disable Metrics/ClassLength
 class V1::ReservationController < ApplicationController
   def index
     token = request.headers['token']
@@ -6,12 +7,11 @@ class V1::ReservationController < ApplicationController
       decoded_token = JWT.decode token, secret, true, { algorithm: 'HS256' }
       decoded_username = decoded_token[0]['name']
       user = User.where(name: decoded_username).first
-      reservations = Reservation.where(user_id: user.id).as_json( except: %i[created_at updated_at user_id])
+      reservations = Reservation.where(user_id: user.id).as_json(except: %i[created_at updated_at user_id])
       render json: {
-        reservations: reservations
+        reservations:
       }
-    rescue
-      JWT::DecodeError
+    rescue JWT::DecodeError
       render json: {
         error: 'Invalid Token'
       }, status: 500
@@ -159,8 +159,10 @@ class V1::ReservationController < ApplicationController
       reservation_id = params[:id]
       target_reservation = Reservation.find(reservation_id)
       if user.id == target_reservation.user_id
-        available_on_date_for_hotel_list = AvailableOnDate.where(hotel_id: target_reservation.hotel_id,
-                                                                 date: target_reservation.date_from..target_reservation.date_to)
+        available_on_date_for_hotel_list = AvailableOnDate.where(
+          hotel_id: target_reservation.hotel_id,
+          date: target_reservation.date_from..target_reservation.date_to
+        )
 
         ActiveRecord::Base.transaction do
           update_rooms_destruction(available_on_date_for_hotel_list, target_reservation.reserved_rooms)
@@ -202,3 +204,4 @@ class V1::ReservationController < ApplicationController
     params.require(:reservation).permit(:reserved_rooms, :hotel_id, :start_date, :end_date)
   end
 end
+# rubocop:enable Metrics/ClassLength
