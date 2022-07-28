@@ -1,8 +1,21 @@
 class V1::ReservationController < ApplicationController
   def index
-    render json: {
-      status: 'Under Construction'
-    }
+    token = request.headers['token']
+    secret = Rails.application.secret_key_base.to_s
+    begin
+      decoded_token = JWT.decode token, secret, true, { algorithm: 'HS256' }
+      decoded_username = decoded_token[0]['name']
+      user = User.where(name: decoded_username).first
+      reservations = Reservation.where(user_id: user.id).as_json( except: %i[created_at updated_at user_id])
+      render json: {
+        reservations: reservations
+      }
+    rescue
+      JWT::DecodeError
+      render json: {
+        error: 'Invalid Token'
+      }, status: 500
+    end
   end
 
   def rooms_available_on_date(reserved_rooms, rooms_free)
