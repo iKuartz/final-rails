@@ -91,7 +91,7 @@ class V1::ReservationController < ApplicationController
       if parameters[:reserved_rooms].to_i < 1
         render json: {
           error: 'Unable to create reservation[1x606]',
-          error_list: ['You should reserve some room.']
+          error_list: ['You should reserve at least one room.']
         }
         return
       end
