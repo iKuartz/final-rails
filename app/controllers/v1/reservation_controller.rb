@@ -19,7 +19,7 @@ class V1::ReservationController < ApplicationController
                                                           rooms_free: hotel.feature.room
         date_list << available_on_date_for_hotel
       end
-      unless rooms_available_on_date reserved_rooms, date_list[0].rooms_free
+      unless rooms_available_on_date(reserved_rooms, date_list[0].rooms_free)
         raise StandardError, "Room not available on #{date_list[0].date}."
       end
 
@@ -31,8 +31,8 @@ class V1::ReservationController < ApplicationController
   def update_rooms_availability(available_dates_list, reserved_rooms)
     ActiveRecord::Base.transaction do
       available_dates_list.each do |available_date|
-        available_date.rooms_occopied += reserved_rooms
-        available_date.rooms_free -= reserved_rooms
+        available_date.rooms_occopied += reserved_rooms.to_i
+        available_date.rooms_free -= reserved_rooms.to_i
         available_date.available = available_date.rooms_free.positive?
         available_date.save
       end
@@ -51,7 +51,7 @@ class V1::ReservationController < ApplicationController
     end
 
     begin
-      update_rooms_availability available_dates_list
+      update_rooms_availability available_dates_list, reserved_rooms
     rescue ActiveRecord::Rollback
       raise StandardError, 'Unable to create reservation. ActiveRecord::Rollback [1x602]'
     rescue ActiveRecord::StatementInvalid
@@ -68,6 +68,34 @@ class V1::ReservationController < ApplicationController
       decoded_username = decoded_token[0]['name']
       user = User.where(name: decoded_username).first
       parameters = reservation_params
+
+      start_date = Date.parse(parameters[:start_date])
+      end_date = Date.parse(parameters[:end_date])
+
+      if start_date.past?
+        render json: {
+          error: 'Unable to create reservation[1x604]',
+          error_list: ['Can not have a date from past']
+        }
+        return
+      end
+
+      if start_date > end_date
+        render json: {
+          error: 'Unable to create reservation[1x605]',
+          error_list: ['Start date can not be after the end date.']
+        }
+        return
+      end
+
+      if parameters[:reserved_rooms].to_i < 1
+        render json: {
+          error: 'Unable to create reservation[1x606]',
+          error_list: ['You should reserve some room.']
+        }
+        return
+      end
+
       reservation = Reservation.create user_id: user.id, hotel_id: parameters[:hotel_id],
                                        date_from: parameters[:start_date], date_to: parameters[:end_date],
                                        reserved_rooms: parameters[:reserved_rooms]
@@ -78,12 +106,13 @@ class V1::ReservationController < ApplicationController
         }, status: 500
       else
         begin
-          process_rooms_availability parameters[:hotel_id], parameters[:start_date], parameters[:end_date], parameters[:reserved_rooms]
+          process_rooms_availability parameters[:hotel_id], parameters[:start_date], parameters[:end_date],
+                                     parameters[:reserved_rooms]
         rescue StandardError => e
           reservation.destroy
           render json: {
             error: 'Unable to create reservation. Internal Server Error.',
-            error_message: e.message
+            error_list: [e.message]
           }, status: 500
           return
         end
