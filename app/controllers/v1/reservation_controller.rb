@@ -127,10 +127,60 @@ class V1::ReservationController < ApplicationController
     end
   end
 
+  def update_rooms_destruction(available_dates_list, reserved_rooms)
+    available_dates_list.each do |available_date|
+      available_date.rooms_occopied -= reserved_rooms.to_i
+      available_date.rooms_free += reserved_rooms.to_i
+      available_date.available = available_date.rooms_free.positive?
+      available_date.save
+    end
+  end
+
   def destroy
-    render json: {
-      status: 'Under Construction'
-    }
+    token = request.headers['token']
+    secret = Rails.application.secret_key_base.to_s
+    begin
+      decoded_token = JWT.decode token, secret, true, { algorithm: 'HS256' }
+      decoded_username = decoded_token[0]['name']
+      user = User.where(name: decoded_username).first
+      reservation_id = params[:id]
+      target_reservation = Reservation.find(reservation_id)
+      if user.id == target_reservation.user_id
+        available_on_date_for_hotel_list = AvailableOnDate.where(hotel_id: target_reservation.hotel_id,
+                                                                 date: target_reservation.date_from..target_reservation.date_to)
+
+        ActiveRecord::Base.transaction do
+          update_rooms_destruction(available_on_date_for_hotel_list, target_reservation.reserved_rooms)
+
+          target_reservation.destroy
+          if target_reservation.destroyed?
+            render json: {
+              message: 'Reservation successfully destroyed'
+            }
+          else
+            render json: {
+              error: 'Unable to delete reservation'
+            }
+          end
+        end
+      else
+        render json: {
+          error: 'User not authorized'
+        }
+      end
+    rescue JWT::DecodeError
+      render json: {
+        error: 'Invalid Token'
+      }, status: 500
+    rescue ActiveRecord::Rollback
+      render json: {
+        error: 'Unable to create reservation. ActiveRecord::Rollback [1x602]'
+      }
+    rescue ActiveRecord::StatementInvalid
+      render json: {
+        error: 'Unable to create reservation. ActiveRecord::StatementInvalid [1x603]'
+      }
+    end
   end
 
   private
