@@ -22,3 +22,7 @@ hotel5.save
 hotel6 = Hotel.new(user_id: user2.id, name: "Lovely huts Hotel", feature_id: feats_hot2.id, address_id: address_hot2.id, description: "This is a charming retreat from the noisy and busy life of the city." )
 hotel6.image.attach(io: File.open(Rails.root.join("app/assets/images/hotel6.jpg")), filename: 'hotel6.jpg')
 hotel6.save
+reservation1 = Reservation.create(user_id: user1.id, hotel_id: hotel1.id, reserved_rooms: 10, date_from: "2022-08-08", date_to: "2022-08-10")
+availability1 = AvailableOnDate.create(date:"2022-08-08", rooms_occopied:10, rooms_free:10, hotel_id:hotel1.id, available:true)
+availability2 = AvailableOnDate.create(date:"2022-08-09", rooms_occopied:10, rooms_free:10, hotel_id:hotel1.id, available:true)
+availability1 = AvailableOnDate.create(date:"2022-08-10", rooms_occopied:10, rooms_free:10, hotel_id:hotel1.id, available:true)
