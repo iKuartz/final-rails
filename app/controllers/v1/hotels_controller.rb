@@ -22,7 +22,7 @@ class V1::HotelsController < ApplicationController
     rescue JWT::DecodeError
       render json: {
         error: 'Invalid Token'
-      }
+      }, status: 500
     end
   end
 
