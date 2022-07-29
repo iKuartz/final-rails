@@ -17,7 +17,7 @@ RSpec.describe Reservation, type: :model do
     expect(reservation).to be_valid
   end
 
-    it 'is not valid without hotel' do
+  it 'is not valid without hotel' do
     reservation = Reservation.create(
       hotel_id: nil,
       user_id: @user1.id,
@@ -28,7 +28,7 @@ RSpec.describe Reservation, type: :model do
     expect(reservation).to_not be_valid
   end
 
-    it 'is not valid without user' do
+  it 'is not valid without user' do
     reservation = Reservation.create(
       hotel_id: @hotel1.id,
       user_id: nil,
@@ -50,7 +50,7 @@ RSpec.describe Reservation, type: :model do
     expect(reservation).to_not be_valid
   end
 
-    it 'is not valid with less than one room' do
+  it 'is not valid with less than one room' do
     reservation = Reservation.create(
       hotel_id: @hotel1.id,
       user_id: @user1.id,
@@ -82,5 +82,4 @@ RSpec.describe Reservation, type: :model do
     )
     expect(reservation).to_not be_valid
   end
-
 end
