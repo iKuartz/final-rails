@@ -1,7 +1,6 @@
 require 'rails_helper'
 
 RSpec.describe Address, type: :model do
-
   it 'is valid with valid attributes' do
     address = Address.new(
       country: 'Brazil',
@@ -16,7 +15,6 @@ RSpec.describe Address, type: :model do
 
   it 'is not valid without a country' do
     address = Address.new(
-      
       country: nil,
       state: 'Rio de Janeiro',
       city: 'Rio de Janeiro',
