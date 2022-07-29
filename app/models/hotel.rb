@@ -1,6 +1,6 @@
 class Hotel < ApplicationRecord
   belongs_to :feature
-  belongs_to :address
+  has_one :address
   has_many :reservations
   has_many :available_on_dates
   belongs_to :user
