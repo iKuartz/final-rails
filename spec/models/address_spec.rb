@@ -1,9 +1,9 @@
 require 'rails_helper'
 
 RSpec.describe Address, type: :model do
+
   it 'is valid with valid attributes' do
     address = Address.new(
-      hotel: @hotel,
       country: 'Brazil',
       state: 'Rio de Janeiro',
       city: 'Rio de Janeiro',
@@ -16,7 +16,7 @@ RSpec.describe Address, type: :model do
 
   it 'is not valid without a country' do
     address = Address.new(
-      hotel: @hotel,
+      
       country: nil,
       state: 'Rio de Janeiro',
       city: 'Rio de Janeiro',
@@ -29,7 +29,6 @@ RSpec.describe Address, type: :model do
 
   it 'is not valid without a state' do
     address = Address.new(
-      hotel: @hotel,
       country: 'Brazil',
       state: nil,
       city: 'Rio de Janeiro',
@@ -42,7 +41,6 @@ RSpec.describe Address, type: :model do
 
   it 'is not valid without a city' do
     address = Address.new(
-      hotel: @hotel,
       country: 'Brazil',
       state: 'Rio de Janeiro',
       city: nil,
@@ -55,7 +53,6 @@ RSpec.describe Address, type: :model do
 
   it 'is not valid without a neighbourhood' do
     address = Address.new(
-      hotel: @hotel,
       country: 'Brazil',
       state: 'Rio de Janeiro',
       city: 'Rio de Janeiro',
@@ -68,7 +65,6 @@ RSpec.describe Address, type: :model do
 
   it 'is not valid without a street' do
     address = Address.new(
-      hotel: @hotel,
       country: 'Brazil',
       state: 'Rio de Janeiro',
       city: 'Rio de Janeiro',
@@ -81,7 +77,6 @@ RSpec.describe Address, type: :model do
 
   it 'is not valid without a number' do
     address = Address.new(
-      hotel: @hotel,
       country: 'Brazil',
       state: 'Rio de Janeiro',
       city: 'Rio de Janeiro',
@@ -94,7 +89,6 @@ RSpec.describe Address, type: :model do
 
   it 'is not valid if number is not an integer' do
     address = Address.new(
-      hotel: @hotel,
       country: 'Brazil',
       state: 'Rio de Janeiro',
       city: 'Rio de Janeiro',
@@ -107,7 +101,6 @@ RSpec.describe Address, type: :model do
 
   it 'is not valid if number is negative' do
     address = Address.new(
-      hotel: @hotel,
       country: 'Brazil',
       state: 'Rio de Janeiro',
       city: 'Rio de Janeiro',
