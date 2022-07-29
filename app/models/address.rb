@@ -1,5 +1,5 @@
 class Address < ApplicationRecord
-  belongs_to :hotel
+  has_one :hotel
   validates :country, presence: { message: 'Country can not be blank' }
   validates :state, presence: { message: 'State can not be blank' }
   validates :city, presence: { message: 'City can not be blank' }
