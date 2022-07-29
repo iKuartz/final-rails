@@ -7,14 +7,21 @@ RSpec.describe 'v1/hotels', type: :request do
     @token = body['token']
   end
 
+  it 'should not work without a token' do
+    get '/v1/hotels', params: { limit: 1 }
+    expect(response).to have_http_status 500
+  end
+
   it 'returns a subset of hotels on limit' do
-    get '/v1/hotels', params: { limit: 1, token: @token }
+    get '/v1/hotels', params: { limit: 1 }, headers: { token: @token }
 
     expect(response).to have_http_status :success
 
     body = JSON.parse response.body
 
     expect(body['data'].size).to eq 1
+
+    image1_path = 'http://www.example.com/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBCZz09IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--3a05090d824299d9420396f810a4e621551a23bc/hotel1.jpg'
     expect(body['data']).to eq([
                                  { 'address' =>
                                     { 'city' => 'Penedo',
@@ -37,12 +44,13 @@ RSpec.describe 'v1/hotels', type: :request do
                                       'tv' => false },
                                    'id' => 1,
                                    'name' => 'Chocolate house Hotel',
-                                   'user_id' => 1 }
+                                   'user_id' => 1,
+                                   'image_path' => image1_path }
                                ])
   end
 
   it 'return a subset of hotels on limit and offset' do
-    get '/v1/hotels', params: { limit: 1, offset: 1, token: @token }
+    get '/v1/hotels', params: { limit: 1, offset: 1 }, headers: { token: @token }
 
     expect(response).to have_http_status :success
 
@@ -50,6 +58,7 @@ RSpec.describe 'v1/hotels', type: :request do
 
     expect(body['data'].size).to eq 1
 
+    image2_path = 'http://www.example.com/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBCdz09IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--ba963b8fe20a09f5c202a4320cbd69fa28f4999e/hotel2.jpg'
     expect(body['data']).to eq([
                                  { 'address' =>
                                      { 'city' => 'Skardu',
@@ -72,7 +81,8 @@ RSpec.describe 'v1/hotels', type: :request do
                                       'tv' => true },
                                    'id' => 2,
                                    'name' => 'Peaceful Mountain Hotel',
-                                   'user_id' => 2 }
+                                   'user_id' => 2,
+                                   'image_path' => image2_path }
                                ])
   end
 
