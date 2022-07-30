@@ -104,7 +104,40 @@ RSpec.describe 'v1/reservation', type: :request do
   path '/v1/reservation' do
 
     get('list reservations') do
+      description 'get reservation list for user'
+      tags 'Reservations'
+      produces 'application/json'
+      parameter name: :token, in: :header, type: :string, required: true
       response(200, 'successful') do
+        schema type: :object, properties: {
+          reservations: {
+            type: :array,
+            items: {
+              type: :object,
+              properties: {
+                reserved_rooms: { type: :integer},
+                hotel_id: { type: :integer},
+                start_date: { type: :string},
+                end_date: { type: :string}
+              }
+            }
+          }
+        }
+        after do |example|
+          example.metadata[:response][:content] = {
+            'application/json' => {
+              example: JSON.parse(response.body, symbolize_names: true)
+            }
+          }
+        end
+        run_test!
+      end
+
+      response(500, 'Invalid Token') do
+        schema type: :object,
+               properties: {
+                 error: { type: :string }
+               }, required: [:error]
 
         after do |example|
           example.metadata[:response][:content] = {
@@ -118,7 +151,69 @@ RSpec.describe 'v1/reservation', type: :request do
     end
 
     post('create reservation') do
+      description 'Create reservation for user'
+      tags 'Reservations'
+      produces 'application/json'
+      consumes 'application/json'
+      parameter name: :token, in: :header, type: :string, required: true
+      parameter name: :params, in: :body, schema: {
+        type: :object,
+        properties: {
+          hotel: {
+            type: :object,
+            properties: {
+              reserved_rooms: { type: :integer},
+              hotel_id: { type: :integer},
+              start_date: { type: :string},
+              end_date: { type: :string}
+            }, required: %i[
+              reserved_rooms
+              hotel_id
+              start_date
+              end_date
+            ]
+          }
+        }
+      }
+
       response(200, 'successful') do
+        schema type: :object,
+               properties: {
+                 message: { type: :string }
+               },
+               required: ['message']
+        after do |example|
+          example.metadata[:response][:content] = {
+            'application/json' => {
+              example: JSON.parse(response.body, symbolize_names: true)
+            }
+          }
+        end
+        run_test!
+      end
+
+      response(501, 'Unable to create reservation') do
+        schema type: :object,
+               properties: {
+                 error: { type: :string },
+                 error_list: { type: :array,
+                               items: { type: :string } }
+               }, required: %i[error error_list]
+        after do |example|
+          example.metadata[:response][:content] = {
+            'application/json' => {
+              example: JSON.parse(response.body, symbolize_names: true)
+            }
+          }
+        end
+        run_test!
+      end
+
+      response(500, 'Invalid Token') do
+        schema type: :object,
+               properties: {
+                 error: { type: :string }
+               }, required: [:error]
 
         after do |example|
           example.metadata[:response][:content] = {
@@ -133,12 +228,51 @@ RSpec.describe 'v1/reservation', type: :request do
   end
 
   path '/v1/reservation/{id}' do
-    # You'll want to customize the parameter types...
-    parameter name: 'id', in: :path, type: :string, description: 'id'
+    parameter name: 'id', in: :path, type: :integer, description: 'id'
 
     delete('delete reservation') do
+      description 'Create reservation for user'
+      tags 'Reservations'
+      produces 'application/json'
+      parameter name: :token, in: :header, type: :string, required: true
       response(200, 'successful') do
-        let(:id) { '123' }
+        schema type: :object,
+               properties: {
+                 message: { type: :string }
+               },
+               required: ['message']
+        let(:id) { 1 }
+
+        after do |example|
+          example.metadata[:response][:content] = {
+            'application/json' => {
+              example: JSON.parse(response.body, symbolize_names: true)
+            }
+          }
+        end
+        run_test!
+      end
+
+      response(501, 'Unable to create reservation') do
+        schema type: :object,
+               properties: {
+                 error: { type: :string }
+               }, required: %i[error]
+        after do |example|
+          example.metadata[:response][:content] = {
+            'application/json' => {
+              example: JSON.parse(response.body, symbolize_names: true)
+            }
+          }
+        end
+        run_test!
+      end
+
+      response(500, 'Invalid Token') do
+        schema type: :object,
+               properties: {
+                 error: { type: :string }
+               }, required: [:error]
 
         after do |example|
           example.metadata[:response][:content] = {
