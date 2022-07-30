@@ -1,7 +1,6 @@
 require 'swagger_helper'
 
 RSpec.describe 'v1/reservation', type: :request do
-
   before :all do
     get '/v1/login/Ivan'
     body = JSON.parse response.body
@@ -53,7 +52,7 @@ RSpec.describe 'v1/reservation', type: :request do
           end_date: '2022-08-10'
         }
       }
-      expect(response).to have_http_status 200
+      expect(response).to have_http_status 501
       body = JSON.parse response.body
       expect(body['error']).to eq('Unable to create reservation[1x604]')
     end
@@ -67,7 +66,7 @@ RSpec.describe 'v1/reservation', type: :request do
           end_date: '2020-08-10'
         }
       }
-      expect(response).to have_http_status 200
+      expect(response).to have_http_status 501
       body = JSON.parse response.body
       expect(body['error']).to eq('Unable to create reservation[1x605]')
     end
@@ -81,7 +80,7 @@ RSpec.describe 'v1/reservation', type: :request do
           end_date: '2022-08-10'
         }
       }
-      expect(response).to have_http_status 200
+      expect(response).to have_http_status 501
       body = JSON.parse response.body
       expect(body['error']).to eq('Unable to create reservation[1x606]')
     end
@@ -102,7 +101,6 @@ RSpec.describe 'v1/reservation', type: :request do
   end
 
   path '/v1/reservation' do
-
     get('list reservations') do
       description 'get reservation list for user'
       tags 'Reservations'
@@ -115,14 +113,15 @@ RSpec.describe 'v1/reservation', type: :request do
             items: {
               type: :object,
               properties: {
-                reserved_rooms: { type: :integer},
-                hotel_id: { type: :integer},
-                start_date: { type: :string},
-                end_date: { type: :string}
+                reserved_rooms: { type: :integer },
+                hotel_id: { type: :integer },
+                start_date: { type: :string },
+                end_date: { type: :string }
               }
             }
           }
         }
+        let(:token) { @token }
         after do |example|
           example.metadata[:response][:content] = {
             'application/json' => {
@@ -146,6 +145,7 @@ RSpec.describe 'v1/reservation', type: :request do
             }
           }
         end
+        let(:token) { '' }
         run_test!
       end
     end
@@ -159,13 +159,13 @@ RSpec.describe 'v1/reservation', type: :request do
       parameter name: :params, in: :body, schema: {
         type: :object,
         properties: {
-          hotel: {
+          reservation: {
             type: :object,
             properties: {
-              reserved_rooms: { type: :integer},
-              hotel_id: { type: :integer},
-              start_date: { type: :string},
-              end_date: { type: :string}
+              reserved_rooms: { type: :integer },
+              hotel_id: { type: :integer },
+              start_date: { type: :string },
+              end_date: { type: :string }
             }, required: %i[
               reserved_rooms
               hotel_id
@@ -182,6 +182,17 @@ RSpec.describe 'v1/reservation', type: :request do
                  message: { type: :string }
                },
                required: ['message']
+        let(:params) do
+          {
+            reservation: {
+              reserved_rooms: 2,
+              hotel_id: 1,
+              start_date: '2022-08-08',
+              end_date: '2022-08-10'
+            }
+          }
+        end
+        let(:token) { @token }
         after do |example|
           example.metadata[:response][:content] = {
             'application/json' => {
@@ -206,6 +217,17 @@ RSpec.describe 'v1/reservation', type: :request do
             }
           }
         end
+        let(:params) do
+          {
+            reservation: {
+              reserved_rooms: -172,
+              hotel_id: 1,
+              start_date: '2022-08-08',
+              end_date: '2021-08-10'
+            }
+          }
+        end
+        let(:token) { @token }
         run_test!
       end
 
@@ -215,6 +237,17 @@ RSpec.describe 'v1/reservation', type: :request do
                  error: { type: :string }
                }, required: [:error]
 
+        let(:token) { '' }
+        let(:params) do
+          {
+            reservation: {
+              reserved_rooms: -172,
+              hotel_id: 1,
+              start_date: '2022-08-08',
+              end_date: '2022-08-10'
+            }
+          }
+        end
         after do |example|
           example.metadata[:response][:content] = {
             'application/json' => {
@@ -242,22 +275,8 @@ RSpec.describe 'v1/reservation', type: :request do
                },
                required: ['message']
         let(:id) { 1 }
+        let(:token) { @token }
 
-        after do |example|
-          example.metadata[:response][:content] = {
-            'application/json' => {
-              example: JSON.parse(response.body, symbolize_names: true)
-            }
-          }
-        end
-        run_test!
-      end
-
-      response(501, 'Unable to create reservation') do
-        schema type: :object,
-               properties: {
-                 error: { type: :string }
-               }, required: %i[error]
         after do |example|
           example.metadata[:response][:content] = {
             'application/json' => {
@@ -281,6 +300,8 @@ RSpec.describe 'v1/reservation', type: :request do
             }
           }
         end
+        let(:id) { 1 }
+        let(:token) { '' }
         run_test!
       end
     end
