@@ -15,7 +15,7 @@
 
 ## Deployment
 
-You can find the app live [here]()
+You can find the app live [here](https://cryptic-lake-58741.herokuapp.com/)
 
 ## Front-end repository
 
@@ -30,7 +30,7 @@ You can find the deployed back-end API [here live](https://rails-hotels-api.hero
 ## Built With
 
 - **JavaScript**
-- **Tailwind CSS**
+- **Bootstrap**
 - **React 18.2**
 - **Redux Toolkit 1.8.1**
 - **React-Redux 8.0.1**
@@ -88,8 +88,8 @@ or
 
 👤 **Fabrizio Garcia**
 
-- GitHub: [@fabgrel10](https://github.com/fabgrel10)           |
-- Twitter: [@fabgrel10](https://twitter.com/fabgrel10)          |
+- GitHub: [@fabgrel10](https://github.com/fabgrel10)
+- Twitter: [@fabgrel10](https://twitter.com/fabgrel10)
 - LinkedIn [@fabgrel10](https://www.linkedin.com/in/fabgrel10/)
 
 👤 **Lisandro Seia**
