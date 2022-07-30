@@ -11,7 +11,7 @@ paths:
         maximum of 100 hotels in one request. If limit is not given it returns 10
         hotels if present.
       tags:
-      - List Hotel
+      - Hotel
       parameters:
       - name: limit
         in: path
@@ -104,7 +104,7 @@ paths:
       summary: create hotel
       description: Add new hotel based on information
       tags:
-      - Create Hotel
+      - Hotel
       parameters:
       - name: token
         in: header
@@ -283,6 +283,175 @@ paths:
                       type: string
                   required:
                   - name
+  "/v1/reservation":
+    get:
+      summary: list reservations
+      description: get reservation list for user
+      tags:
+      - Reservations
+      parameters:
+      - name: token
+        in: header
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reservations:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        reserved_rooms:
+                          type: integer
+                        hotel_id:
+                          type: integer
+                        start_date:
+                          type: string
+                        end_date:
+                          type: string
+        '500':
+          description: Invalid Token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+    post:
+      summary: create reservation
+      description: Create reservation for user
+      tags:
+      - Reservations
+      parameters:
+      - name: token
+        in: header
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                required:
+                - message
+        '501':
+          description: Unable to create reservation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  error_list:
+                    type: array
+                    items:
+                      type: string
+                required:
+                - error
+                - error_list
+        '500':
+          description: Invalid Token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                hotel:
+                  type: object
+                  properties:
+                    reserved_rooms:
+                      type: integer
+                    hotel_id:
+                      type: integer
+                    start_date:
+                      type: string
+                    end_date:
+                      type: string
+                  required:
+                  - reserved_rooms
+                  - hotel_id
+                  - start_date
+                  - end_date
+  "/v1/reservation/{id}":
+    parameters:
+    - name: id
+      in: path
+      description: id
+      required: true
+      schema:
+        type: integer
+    delete:
+      summary: delete reservation
+      description: Create reservation for user
+      tags:
+      - Reservations
+      parameters:
+      - name: token
+        in: header
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                required:
+                - message
+        '501':
+          description: Unable to create reservation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+        '500':
+          description: Invalid Token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
 servers:
 - url: https://{defaultHost}
   variables:
