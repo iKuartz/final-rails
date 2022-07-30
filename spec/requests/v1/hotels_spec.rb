@@ -5,6 +5,12 @@ RSpec.describe 'v1/hotels', type: :request do
     get '/v1/login/Ivan'
     body = JSON.parse response.body
     @token = body['token']
+    file = Rails.root.join('app', 'assets', 'images', 'hotel1.jpg')
+    @image = ActiveStorage::Blob.create_and_upload!(
+    io: File.open(file, 'rb'),
+      filename: 'hotel1.jpg',
+      content_type: 'image/jpeg' # Or figure it out from `name` if you have non-JPEGs
+    ).signed_id
   end
 
   it 'should not work without a token' do
@@ -110,13 +116,13 @@ RSpec.describe 'v1/hotels', type: :request do
     expect(body['message']).to eq('Hotel created successfully')
   end
 
-  path '/v1/hotels?limit={limit}&offset={offset}' do
+  path '/v1/hotels' do
     get('get list of hotels') do
       description 'Based on limit and offset it returns list of hotels. It returns maximum of 100 hotels in one request. If limit is not given it returns 10 hotels if present.'
       tags 'Hotel'
       produces 'application/json'
-      parameter name: :limit, in: :path, type: :integer
-      parameter name: :offset, in: :path, type: :integer
+      parameter name: :limit, in: :query, type: :integer
+      parameter name: :offset, in: :query, type: :integer
       parameter name: :token, in: :header, type: :string, required: true
 
       response(200, 'successful') do
@@ -131,7 +137,7 @@ RSpec.describe 'v1/hotels', type: :request do
                          type: :object,
                          properties: {
                            city: { type: :string },
-                           complement: { type: :string },
+                           complement: { type: :string, nullable: true },
                            country: { type: :string },
                            id: { type: :integer },
                            neighbourhood: { type: :string },
@@ -162,6 +168,9 @@ RSpec.describe 'v1/hotels', type: :request do
                  }
                }, required: [:data]
 
+        let(:limit) { 1 }
+        let(:offset) { 1 }
+        let(:token) { @token }
         after do |example|
           example.metadata[:response][:content] = {
             'application/json' => {
@@ -178,6 +187,9 @@ RSpec.describe 'v1/hotels', type: :request do
                  error: { type: :string }
                }, required: [:error]
 
+        let(:limit) { 1 }
+        let(:offset) { 1 }
+        let(:token) { '' }
         after do |example|
           example.metadata[:response][:content] = {
             'application/json' => {
@@ -235,12 +247,38 @@ RSpec.describe 'v1/hotels', type: :request do
           }
         }
       }
+
+      let(:params) do
+        {
+          hotel: {
+            room: 3,
+            pool: true,
+            bar: true,
+            air_conditioning: true,
+            tv: true,
+            gym: true,
+            country: 'Brazilkistan',
+            state: 'Paradise',
+            city: 'Best City Ever',
+            neighbourhood: 'Angels Meadows',
+            street: 'Peace St.',
+            number: 0,
+            complement: 'Building n. 999',
+            name: 'Great Hotel Resort',
+            description: 'AMAZING!!!!!!! 20 Characters needed for success in life.',
+            image: @image
+          }
+        }
+      end
+
       response(200, 'Hotel Added') do
         schema type: :object,
                properties: {
                  message: { type: :string }
                },
                required: ['message']
+
+        let(:token) { @token }
         after do |example|
           example.metadata[:response][:content] = {
             'application/json' => {
@@ -257,6 +295,7 @@ RSpec.describe 'v1/hotels', type: :request do
                  error: { type: :string }
                }, required: [:error]
 
+        let(:token) { '' }
         after do |example|
           example.metadata[:response][:content] = {
             'application/json' => {
@@ -275,6 +314,14 @@ RSpec.describe 'v1/hotels', type: :request do
                                items: { type: :string } }
                }, required: %i[error error_list]
 
+        let(:token) { @token }
+        let(:params) do
+          {
+            hotel: {
+              image: fixture_file_upload('app/assets/images/hotel4.jpg', 'image/png')
+            }
+          }
+        end
         after do |example|
           example.metadata[:response][:content] = {
             'application/json' => {
