@@ -89,7 +89,7 @@ class V1::ReservationController < ApplicationController
         render json: {
           error: 'Unable to create reservation[1x604]',
           error_list: ['Can not have a date from past']
-        }
+        }, status: 501
         return
       end
 
@@ -97,7 +97,7 @@ class V1::ReservationController < ApplicationController
         render json: {
           error: 'Unable to create reservation[1x605]',
           error_list: ['Start date can not be after the end date.']
-        }
+        }, status: 501
         return
       end
 
@@ -105,7 +105,7 @@ class V1::ReservationController < ApplicationController
         render json: {
           error: 'Unable to create reservation[1x606]',
           error_list: ['You should reserve at least one room.']
-        }
+        }, status: 501
         return
       end
 
@@ -116,7 +116,7 @@ class V1::ReservationController < ApplicationController
         render json: {
           error: 'Unable to create reservation[1x601]',
           error_list: reservation.errors.full_messages
-        }, status: 500
+        }, status: 501
       else
         begin
           process_rooms_availability parameters[:hotel_id], parameters[:start_date], parameters[:end_date],
@@ -126,7 +126,7 @@ class V1::ReservationController < ApplicationController
           render json: {
             error: 'Unable to create reservation. Internal Server Error.',
             error_list: [e.message]
-          }, status: 500
+          }, status: 501
           return
         end
         render json: {
@@ -171,17 +171,17 @@ class V1::ReservationController < ApplicationController
           if target_reservation.destroyed?
             render json: {
               message: 'Reservation successfully destroyed'
-            }
+            }, status: 200
           else
             render json: {
               error: 'Unable to delete reservation'
-            }
+            }, status: 501
           end
         end
       else
         render json: {
           error: 'User not authorized'
-        }
+        }, status: 501
       end
     rescue JWT::DecodeError
       render json: {
@@ -190,11 +190,11 @@ class V1::ReservationController < ApplicationController
     rescue ActiveRecord::Rollback
       render json: {
         error: 'Unable to create reservation. ActiveRecord::Rollback [1x602]'
-      }
+      }, status: 501
     rescue ActiveRecord::StatementInvalid
       render json: {
         error: 'Unable to create reservation. ActiveRecord::StatementInvalid [1x603]'
-      }
+      }, status: 501
     end
   end
 
