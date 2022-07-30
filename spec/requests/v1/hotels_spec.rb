@@ -110,74 +110,180 @@ RSpec.describe 'v1/hotels', type: :request do
     expect(body['message']).to eq('Hotel created successfully')
   end
 
-  # path '/v1/hotels' do
-  #   get('list hotels') do
+  path '/v1/hotels?limit={limit}&offset={offset}' do
+    get('get list of hotels') do
+      description 'Based on limit and offset it returns list of hotels. It returns maximum of 100 hotels in one request. If limit is not given it returns 10 hotels if present.'
+      tags 'List Hotel'
+      produces 'application/json'
+      parameter name: :limit, in: :path, type: :integer
+      parameter name: :offset, in: :path, type: :integer
+      parameter name: :token, in: :header, type: :string, required: true
 
-  #     response(200, 'successful') do
-  #       after do |example|
-  #         example.metadata[:response][:content] = {
-  #           'application/json' => {
-  #             example: JSON.parse(response.body, symbolize_names: true)
-  #           }
-  #         }
-  #       end
-  #       run_test!
-  #     end
-  #   end
+      response(200, 'successful') do
+        schema type: :object,
+               properties: {
+                 data: {
+                   type: :array,
+                   items: {
+                     type: :object,
+                     properties: {
+                       address: {
+                         type: :object,
+                         properties: {
+                           city: { type: :string },
+                           complement: { type: :string },
+                           country: { type: :string },
+                           id: { type: :integer },
+                           neighbourhood: { type: :string },
+                           number: { type: :integer },
+                           state: { type: :string },
+                           street: { type: :string }
+                         }
+                       },
+                       description: { type: :string },
+                       feature: {
+                         type: :object,
+                         properties: {
+                           air_conditioning: { type: :boolean },
+                           bar: { type: :boolean },
+                           gym: { type: :boolean },
+                           id: { type: :integer },
+                           pool: { type: :boolean },
+                           room: { type: :integer },
+                           tv: { type: :boolean }
+                         }
+                       },
+                       id: { type: :integer },
+                       name: { type: :string },
+                       user_id: { type: :integer },
+                       image_path: { type: :string }
+                     }
+                   }
+                 }
+               }, required: [:data]
 
-  #   post('create hotel') do
-  #     tags 'Create hotel'
-  #     consumes 'application/json'
-  #     produces 'application/json'
-  #     let(:token) { "token: '#{@token}'" }
-  #     # parameter name: :token, in: :body, type: :string
-  #     let(:hotel) { '' }
-  #     parameter name: :hotel, in: :body, schema: {
-  #       type: :object,
-  #       properties: {
-  #         token: { type: :string},
-  #         hotel: { type: :object,
-  #                  properties: {
-  #                    room: { type: :boolean },
-  #                    pool: { type: :boolean },
-  #                    bar: { type: :boolean },
-  #                    air_conditioning: { type: :boolean },
-  #                    tv: { type: :boolean },
-  #                    gym: { type: :boolean },
-  #                    country: { type: :string },
-  #                    state: { type: :string },
-  #                    city: { type: :string },
-  #                    neighbourhood: { type: :string },
-  #                    street: { type: :string },
-  #                    number: { type: :integer },
-  #                    complement: { type: :string },
-  #                    name: { type: :string },
-  #                    description: { type: :string }
-  #                  } }
-  #       },
-  #       required: %i[room pool bar air_conditioning tv gym country state city neighbourhood street
-  #                    number name description]
-  #     }
+        after do |example|
+          example.metadata[:response][:content] = {
+            'application/json' => {
+              example: JSON.parse(response.body, symbolize_names: true)
+            }
+          }
+        end
+        run_test!
+      end
 
-  #     response(200, 'successful') do
-  #       let(:token) { @token }
-  #       parameter name: :token, in: :body, type: :string
-  #       schema type: :object,
-  #              properties: {
-  #                message: { type: :string }
-  #              },
-  #              required: ['message']
-  #       run_test! do |response|
-  #         p response.body
-  #       end
-  #     end
+      response(500, 'Invalid Token') do
+        schema type: :object,
+               properties: {
+                 error: { type: :string }
+               }, required: [:error]
 
-  #     response(500, 'successful') do
-  #       run_test! do |response|
-  #         p request.body.string
-  #         p response.body
-  #       end
-  #     end
-  #   end
-  # end
+        after do |example|
+          example.metadata[:response][:content] = {
+            'application/json' => {
+              example: JSON.parse(response.body, symbolize_names: true)
+            }
+          }
+        end
+        run_test!
+      end
+    end
+
+    post('create hotel') do
+      description 'Add new hotel based on information'
+      tags 'Create Hotel'
+      produces 'application/json'
+      consumes 'application/json'
+      parameter name: :token, in: :header, type: :string, required: true
+      parameter name: :params, in: :body, schema: {
+        type: :object,
+        properties: {
+          hotel: {
+            type: :object,
+            properties: {
+              name: { type: :string },
+              description: { type: :string },
+              room: { type: :integer },
+              pool: { type: :boolean },
+              bar: { type: :boolean },
+              air_conditioning: { type: :boolean },
+              tv: { type: :boolean },
+              gym: { type: :boolean },
+              country: { type: :string },
+              state: { type: :string },
+              city: { type: :string },
+              neighbourhood: { type: :string },
+              street: { type: :string },
+              number: { type: :integer },
+              complement: { type: :string }
+            }, required: %i[
+              name
+              description
+              room
+              pool
+              bar
+              air_conditioning
+              tv
+              gym
+              country
+              state
+              city
+              neighbourhood
+              street
+              number
+            ]
+          }
+        }
+      }
+      response(200, 'Hotel Added') do
+        schema type: :object,
+               properties: {
+                 message: { type: :string }
+               },
+               required: ['message']
+        after do |example|
+          example.metadata[:response][:content] = {
+            'application/json' => {
+              example: JSON.parse(response.body, symbolize_names: true)
+            }
+          }
+        end
+        run_test!
+      end
+
+      response(500, 'Invalid Token') do
+        schema type: :object,
+               properties: {
+                 error: { type: :string }
+               }, required: [:error]
+
+        after do |example|
+          example.metadata[:response][:content] = {
+            'application/json' => {
+              example: JSON.parse(response.body, symbolize_names: true)
+            }
+          }
+        end
+        run_test!
+      end
+
+      response(501, 'Unable to save to database') do
+        schema type: :object,
+               properties: {
+                 error: { type: :string },
+                 error_list: { type: :array,
+                               items: { type: :string } }
+               }, required: %i[error error_list]
+
+        after do |example|
+          example.metadata[:response][:content] = {
+            'application/json' => {
+              example: JSON.parse(response.body, symbolize_names: true)
+            }
+          }
+        end
+        run_test!
+      end
+    end
+  end
 end
