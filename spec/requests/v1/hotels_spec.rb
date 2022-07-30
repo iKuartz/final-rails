@@ -113,7 +113,7 @@ RSpec.describe 'v1/hotels', type: :request do
   path '/v1/hotels?limit={limit}&offset={offset}' do
     get('get list of hotels') do
       description 'Based on limit and offset it returns list of hotels. It returns maximum of 100 hotels in one request. If limit is not given it returns 10 hotels if present.'
-      tags 'List Hotel'
+      tags 'Hotel'
       produces 'application/json'
       parameter name: :limit, in: :path, type: :integer
       parameter name: :offset, in: :path, type: :integer
@@ -191,7 +191,7 @@ RSpec.describe 'v1/hotels', type: :request do
 
     post('create hotel') do
       description 'Add new hotel based on information'
-      tags 'Create Hotel'
+      tags 'Hotel'
       produces 'application/json'
       consumes 'application/json'
       parameter name: :token, in: :header, type: :string, required: true
