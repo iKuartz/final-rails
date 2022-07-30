@@ -7,7 +7,7 @@ RSpec.describe 'v1/hotels', type: :request do
     @token = body['token']
     file = Rails.root.join('app', 'assets', 'images', 'hotel1.jpg')
     @image = ActiveStorage::Blob.create_and_upload!(
-    io: File.open(file, 'rb'),
+      io: File.open(file, 'rb'),
       filename: 'hotel1.jpg',
       content_type: 'image/jpeg' # Or figure it out from `name` if you have non-JPEGs
     ).signed_id
