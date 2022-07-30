@@ -4,20 +4,116 @@ info:
   title: API V1
   version: v1
 paths:
-  "/v1/hotels":
+  "/v1/hotels?limit={limit}&offset={offset}":
     get:
-      summary: list hotels
+      summary: get list of hotels
+      description: Based on limit and offset it returns list of hotels. It returns
+        maximum of 100 hotels in one request. If limit is not given it returns 10
+        hotels if present.
+      tags:
+      - List Hotel
+      parameters:
+      - name: limit
+        in: path
+        required: true
+        schema:
+          type: integer
+      - name: offset
+        in: path
+        required: true
+        schema:
+          type: integer
+      - name: token
+        in: header
+        required: true
+        schema:
+          type: string
       responses:
         '200':
           description: successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        address:
+                          type: object
+                          properties:
+                            city:
+                              type: string
+                            complement:
+                              type: string
+                            country:
+                              type: string
+                            id:
+                              type: integer
+                            neighbourhood:
+                              type: string
+                            number:
+                              type: integer
+                            state:
+                              type: string
+                            street:
+                              type: string
+                        description:
+                          type: string
+                        feature:
+                          type: object
+                          properties:
+                            air_conditioning:
+                              type: boolean
+                            bar:
+                              type: boolean
+                            gym:
+                              type: boolean
+                            id:
+                              type: integer
+                            pool:
+                              type: boolean
+                            room:
+                              type: integer
+                            tv:
+                              type: boolean
+                        id:
+                          type: integer
+                        name:
+                          type: string
+                        user_id:
+                          type: integer
+                        image_path:
+                          type: string
+                required:
+                - data
+        '500':
+          description: Invalid Token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
     post:
       summary: create hotel
+      description: Add new hotel based on information
       tags:
-      - Create hotel
-      parameters: []
+      - Create Hotel
+      parameters:
+      - name: token
+        in: header
+        required: true
+        schema:
+          type: string
       responses:
         '200':
-          description: successful
+          description: Hotel Added
           content:
             application/json:
               schema:
@@ -27,6 +123,33 @@ paths:
                     type: string
                 required:
                 - message
+        '500':
+          description: Invalid Token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+        '501':
+          description: Unable to save to database
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  error_list:
+                    type: array
+                    items:
+                      type: string
+                required:
+                - error
+                - error_list
       requestBody:
         content:
           application/json:
@@ -36,8 +159,12 @@ paths:
                 hotel:
                   type: object
                   properties:
+                    name:
+                      type: string
+                    description:
+                      type: string
                     room:
-                      type: boolean
+                      type: integer
                     pool:
                       type: boolean
                     bar:
@@ -62,39 +189,37 @@ paths:
                       type: integer
                     complement:
                       type: string
-                    name:
-                      type: string
-                    description:
-                      type: string
-              required:
-              - room
-              - pool
-              - bar
-              - air_conditioning
-              - tv
-              - gym
-              - country
-              - state
-              - city
-              - neighbourhood
-              - street
-              - number
-              - name
-              - description
+                  required:
+                  - name
+                  - description
+                  - room
+                  - pool
+                  - bar
+                  - air_conditioning
+                  - tv
+                  - gym
+                  - country
+                  - state
+                  - city
+                  - neighbourhood
+                  - street
+                  - number
   "/v1/login/{name}":
     get:
-      summary: login user
+      summary: Logs user in
+      description: Logs the user based on user name if the user exists.
       tags:
-      - Login
+      - Login Route
       parameters:
       - name: name
         in: path
+        description: Name of registered user
         required: true
         schema:
           type: string
       responses:
         '200':
-          description: successful
+          description: User Present in database
           content:
             application/json:
               schema:
@@ -102,10 +227,8 @@ paths:
                 properties:
                   token:
                     type: string
-                required:
-                - token
         '404':
-          description: error
+          description: User does not exist
           content:
             application/json:
               schema:
@@ -115,9 +238,6 @@ paths:
                     type: string
                   error:
                     type: string
-                required:
-                - message
-                - error
   "/v1/register":
     post:
       summary: register user
@@ -146,11 +266,7 @@ paths:
                   message:
                     type: string
                   error:
-                    oneOf:
-                    - type: string
-                    - type: array
-                      items:
-                        type: string
+                    type: string
                 required:
                 - message
                 - error
@@ -165,8 +281,8 @@ paths:
                   properties:
                     name:
                       type: string
-              required:
-              - name
+                  required:
+                  - name
 servers:
 - url: https://{defaultHost}
   variables:
