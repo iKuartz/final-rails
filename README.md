@@ -2,16 +2,24 @@
 
 > Hotel Reservations is a project made by our 4-member group to give users options of hotels around the world to reserve with the options for the owners of these hotels to add and delete these hotels. Users can create an account to be able to reserve one (or many) hotel rooms and also add their own hotels. Feel free to fork this project and modify it for your own use!
 
-![image]()
+![Screenshot of our APP]()
+
+![ERD diagram of our database](images/ERD_diagram.png)
 
 
 ## Deployment
 
 You can find the app live [here]()
 
-## Back-end Repository
+## Front-end repository
 
-You can find the back-end API [here](https://rails-hotels-api.herokuapp.com/).
+You can find the front-end code [here](https://github.com/iKuartz/final-react)
+
+## Back-end deployment repository
+
+You can find the back-end code [here](https://github.com/iKuartz/final-rails)
+
+You can find the deployed back-end API [here live](https://rails-hotels-api.herokuapp.com/).
 
 ## Built With
 
@@ -22,7 +30,9 @@ You can find the back-end API [here](https://rails-hotels-api.herokuapp.com/).
 - **React-Redux 8.0.1**
 - **Ruby 3.1.2**
 - **Rails 7**
+- **PostgreSQL**
 - **Visual Studio Code**
+
 
 ## Getting Started
 
@@ -39,21 +49,29 @@ You can find the back-end API [here](https://rails-hotels-api.herokuapp.com/).
 - Download all dependencies to use the Project
 
 ```bash
-> yarn install or npm install
+> yarn start
+or 
+> npm start`
 ```
 
 #### Step 3:
 
 In the project directory, you can run:
 
-##### `bundle install`
-##### `rails s`
-##### then in another terminal, `yarn start` or `npm start`
-
+```bash
+> bundle install
+> rails s
+```
+then open another terminal and type
+```bash
+> yarn start
+or 
+> npm start`
+```
 ## Authors
 
 👤 **Ivan Silva**
-- GitHub: [iKuartz](https://github.com/iKuartz)
+- GitHub: [@iKuartz](https://github.com/iKuartz)
 - LinkedIn: [Ivan Barbosa da Silva](https://www.linkedin.com/in/i-b-silva/)
 
 👤 **Saadat Ali**
@@ -76,7 +94,7 @@ In the project directory, you can run:
 ## 🤝 Contributing
 
 Contributions, issues, and feature requests are welcome and highly encouraged!
-We feel that your input is what helps us grow so you're always Welcome :)
+We feel that your input is what helps us grow so you're always welcome :)
 
 Feel free to check the [issues page](../../issues/).
 
@@ -87,7 +105,7 @@ Feel free to check the [issues page](../../issues/).
 
 ## Show your support
 
-Give a ⭐️ if you like this project!
+Give us a ⭐️ if you like this project!
 
 ## 📝 License
 
