@@ -4,7 +4,7 @@ info:
   title: API V1
   version: v1
 paths:
-  "/v1/hotels?limit={limit}&offset={offset}":
+  "/v1/hotels":
     get:
       summary: get list of hotels
       description: Based on limit and offset it returns list of hotels. It returns
@@ -14,13 +14,11 @@ paths:
       - Hotel
       parameters:
       - name: limit
-        in: path
-        required: true
+        in: query
         schema:
           type: integer
       - name: offset
-        in: path
-        required: true
+        in: query
         schema:
           type: integer
       - name: token
@@ -48,6 +46,7 @@ paths:
                               type: string
                             complement:
                               type: string
+                              nullable: true
                             country:
                               type: string
                             id:
@@ -383,7 +382,7 @@ paths:
             schema:
               type: object
               properties:
-                hotel:
+                reservation:
                   type: object
                   properties:
                     reserved_rooms:
@@ -430,17 +429,6 @@ paths:
                     type: string
                 required:
                 - message
-        '501':
-          description: Unable to create reservation
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                required:
-                - error
         '500':
           description: Invalid Token
           content:
