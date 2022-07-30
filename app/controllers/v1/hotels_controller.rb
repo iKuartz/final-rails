@@ -22,7 +22,7 @@ class V1::HotelsController < ApplicationController
     rescue JWT::DecodeError
       render json: {
         error: 'Invalid Token'
-      }
+      }, status: 500
     end
   end
 
@@ -41,7 +41,7 @@ class V1::HotelsController < ApplicationController
         render json: {
           error: 'Unable to save to the database[1x501]',
           error_list: feature.errors.full_messages
-        }, status: 500
+        }, status: 501
       else
         address = Address.create(country: parameters[:country], state: parameters[:state], city: parameters[:city],
                                  neighbourhood: parameters[:neighbourhood], street: parameters[:street],
@@ -50,7 +50,7 @@ class V1::HotelsController < ApplicationController
           render json: {
             error: 'Unable to save to the database[1x502]',
             error_list: address.errors.full_messages
-          }, status: 500
+          }, status: 501
           feature.destroy
         else
           hotel = Hotel.create(name: parameters[:name], description: parameters[:description], feature_id: feature.id,
@@ -59,7 +59,7 @@ class V1::HotelsController < ApplicationController
             render json: {
               error: 'Unable to save to the database[1x503]',
               error_list: hotel.errors.full_messages
-            }, status: 500
+            }, status: 501
             feature.destroy
             address.destroy
           else
