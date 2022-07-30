@@ -1,3 +1,4 @@
+# rubocop:disable Metrics/BlockLength
 require 'swagger_helper'
 
 RSpec.describe 'v1/hotels', type: :request do
@@ -118,7 +119,8 @@ RSpec.describe 'v1/hotels', type: :request do
 
   path '/v1/hotels' do
     get('get list of hotels') do
-      description 'Based on limit and offset it returns list of hotels. It returns maximum of 100 hotels in one request. If limit is not given it returns 10 hotels if present.'
+      description 'Based on limit and offset it returns list of hotels.
+      It returns maximum of 100 hotels in one request. If limit is not given it returns 10 hotels if present.'
       tags 'Hotel'
       produces 'application/json'
       parameter name: :limit, in: :query, type: :integer
@@ -334,3 +336,4 @@ RSpec.describe 'v1/hotels', type: :request do
     end
   end
 end
+# rubocop:enable Metrics/BlockLength

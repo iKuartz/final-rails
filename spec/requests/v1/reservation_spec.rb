@@ -1,3 +1,4 @@
+# rubocop:disable Metrics/BlockLength
 require 'swagger_helper'
 
 RSpec.describe 'v1/reservation', type: :request do
@@ -307,3 +308,4 @@ RSpec.describe 'v1/reservation', type: :request do
     end
   end
 end
+# rubocop:enable Metrics/BlockLength

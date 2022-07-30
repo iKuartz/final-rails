@@ -1,3 +1,4 @@
+# rubocop:disable Metrics/BlockLength
 require 'swagger_helper'
 RSpec.describe 'Register', type: :request do
   it 'should have register route' do
@@ -59,3 +60,4 @@ RSpec.describe 'Register', type: :request do
     end
   end
 end
+# rubocop:enable Metrics/BlockLength
