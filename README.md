@@ -2,7 +2,13 @@
 
 > Hotel Reservations is a project made by our 4-member group to give users options of hotels around the world to reserve with the options for the owners of these hotels to add and delete these hotels. Users can create an account to be able to reserve one (or many) hotel rooms and also add their own hotels. Feel free to fork this project and modify it for your own use!
 
-![Screenshot of our APP]()
+![Screenshot of our APP](images/3.png)
+
+![Screenshot of our APP](images/1.png)
+
+![Screenshot of our APP](images/2.png)
+
+![Screenshot of our APP](images/4.png)
 
 ![ERD diagram of our database](images/ERD_diagram.png)
 
