@@ -1,6 +1,7 @@
-require 'rails_helper'
+require 'swagger_helper'
 
 RSpec.describe 'v1/reservation', type: :request do
+
   before :all do
     get '/v1/login/Ivan'
     body = JSON.parse response.body
@@ -97,6 +98,57 @@ RSpec.describe 'v1/reservation', type: :request do
       expect(response).to have_http_status 200
       body = JSON.parse response.body
       expect(body['message']).to eq('Reservation successfully destroyed')
+    end
+  end
+
+  path '/v1/reservation' do
+
+    get('list reservations') do
+      response(200, 'successful') do
+
+        after do |example|
+          example.metadata[:response][:content] = {
+            'application/json' => {
+              example: JSON.parse(response.body, symbolize_names: true)
+            }
+          }
+        end
+        run_test!
+      end
+    end
+
+    post('create reservation') do
+      response(200, 'successful') do
+
+        after do |example|
+          example.metadata[:response][:content] = {
+            'application/json' => {
+              example: JSON.parse(response.body, symbolize_names: true)
+            }
+          }
+        end
+        run_test!
+      end
+    end
+  end
+
+  path '/v1/reservation/{id}' do
+    # You'll want to customize the parameter types...
+    parameter name: 'id', in: :path, type: :string, description: 'id'
+
+    delete('delete reservation') do
+      response(200, 'successful') do
+        let(:id) { '123' }
+
+        after do |example|
+          example.metadata[:response][:content] = {
+            'application/json' => {
+              example: JSON.parse(response.body, symbolize_names: true)
+            }
+          }
+        end
+        run_test!
+      end
     end
   end
 end
