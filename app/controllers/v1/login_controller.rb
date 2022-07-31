@@ -1,5 +1,5 @@
 class V1::LoginController < ApplicationController
-  def find_user(name)
+  def generate_user_token(name)
     user = User.find_by! name: name
     payload = {
       name: user.name
@@ -13,7 +13,7 @@ class V1::LoginController < ApplicationController
   def index
     name = params[:name]
     begin
-      find_user name
+      generate_user_token name
     rescue ActiveRecord::RecordNotFound
       render json: {
         message: 'Error logging in',
