@@ -10,6 +10,12 @@ RSpec.describe 'Register', type: :request do
     post '/v1/register', params: { user: { name: 'Ivan' } }
     expect(response).to have_http_status 500
   end
+
+  it 'should not register user if the name is nill' do
+    post '/v1/register', params: { user: { name: nil } }
+    expect(response).to have_http_status 500
+  end
+
   path '/v1/register' do
     post('register user') do
       tags 'Register'
