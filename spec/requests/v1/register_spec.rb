@@ -13,7 +13,7 @@ RSpec.describe 'Register', type: :request do
 
   it 'should not register user if the name is nill' do
     post '/v1/register', params: { user: { name: nil } }
-    expect(response).to have_http_status 500
+    expect(response).to have_http_status 501
   end
 
   path '/v1/register' do
