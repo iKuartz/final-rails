@@ -30,8 +30,8 @@ class V1::LoginController < ApplicationController
   rescue ActiveRecord::RecordInvalid => e
     render json: {
       message: 'Error saving user to database',
-      error: e.record.errors
-    }, status: 500
+      error_list: e.record.errors
+    }, status: 501
   end
 
   def create
