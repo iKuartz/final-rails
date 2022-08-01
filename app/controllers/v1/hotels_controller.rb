@@ -44,7 +44,7 @@ class V1::HotelsController < ApplicationController
     ActiveRecord::Base.transaction do
       feature = create_feature parameters
       address = create_address parameters
-      Hotel.create(name: parameters[:name], description: parameters[:description], feature_id: feature.id,
+      Hotel.create!(name: parameters[:name], description: parameters[:description], feature_id: feature.id,
                    address_id: address.id, user_id: user.id, image: parameters[:image])
       render json: {
         message: 'Hotel created successfully'

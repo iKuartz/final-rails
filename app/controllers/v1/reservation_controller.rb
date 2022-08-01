@@ -78,7 +78,7 @@ class V1::ReservationController < ApplicationController
   end
 
   def create_reservation(parameters, user)
-    Reservation.create user_id: user.id, hotel_id: parameters[:hotel_id],
+    Reservation.create! user_id: user.id, hotel_id: parameters[:hotel_id],
                        date_from: parameters[:start_date], date_to: parameters[:end_date],
                        reserved_rooms: parameters[:reserved_rooms]
   end
