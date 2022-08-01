@@ -1,57 +1,49 @@
 class V1::LoginController < ApplicationController
+  def generate_user_token(name)
+    user = User.find_by! name: name
+    payload = {
+      name: user.name
+    }
+    token = JsonWebToken.encode payload
+    render json: {
+      token:
+    }, status: 200
+  end
+
   def index
     name = params[:name]
-    users = User.all
-    user_present = false
-    users.each do |user|
-      next unless user.name == name
-
-      payload = {
-        name:
-      }
-      secret = Rails.application.secret_key_base.to_s
-      token = JWT.encode payload, secret, 'HS256'
+    begin
+      generate_user_token name
+    rescue ActiveRecord::RecordNotFound
       render json: {
-        token:
-      }, status: 200
-      user_present = true
-      break
+        message: 'Error logging in',
+        error: 'User not present'
+      }, status: 404
     end
+  end
 
-    return if user_present
-
+  def create_new_record(parameters)
+    User.create! parameters
     render json: {
-      message: 'Error logging in',
-      error: 'User not present'
-    }, status: 404
+      message: 'User Created Successfully'
+    }, status: 200
+  rescue ActiveRecord::RecordInvalid => e
+    render json: {
+      message: 'Error saving user to database',
+      error_list: e.record.errors
+    }, status: 501
   end
 
   def create
-    users = User.all
-    user_present = false
-    users.each do |user|
-      next unless user.name == register_params[:name]
-
+    parameters = register_params
+    begin
+      User.find_by! name: parameters[:name]
       render json: {
         message: 'Error saving user to database',
         error: 'User already registered'
       }, status: 500
-      user_present = true
-      break
-    end
-
-    return if user_present
-
-    user = User.create(register_params)
-    if user.new_record?
-      render json: {
-        message: 'Error saving user to database',
-        error: user.errors[:name]
-      }, status: 500
-    else
-      render json: {
-        message: 'User Created Successfully'
-      }, status: 200
+    rescue ActiveRecord::RecordNotFound
+      create_new_record parameters
     end
   end
 

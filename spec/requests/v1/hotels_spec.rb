@@ -311,10 +311,10 @@ RSpec.describe 'v1/hotels', type: :request do
       response(501, 'Unable to save to database') do
         schema type: :object,
                properties: {
-                 error: { type: :string },
+                 message: { type: :string },
                  error_list: { type: :array,
                                items: { type: :string } }
-               }, required: %i[error error_list]
+               }, required: %i[message error_list]
 
         let(:token) { @token }
         let(:params) do
