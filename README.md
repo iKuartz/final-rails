@@ -2,20 +2,11 @@
 
 > Hotel Reservations is a project made by our 4-member group to give users options of hotels around the world to reserve with the options for the owners of these hotels to add and delete these hotels. Users can create an account to be able to reserve one (or many) hotel rooms and also add their own hotels. Feel free to fork this project and modify it for your own use!
 
-![Screenshot of our APP](images/3.png)
-
-![Screenshot of our APP](images/1.png)
-
-![Screenshot of our APP](images/2.png)
-
-![Screenshot of our APP](images/4.png)
-
 ![ERD diagram of our database](images/ERD_diagram.png)
-
 
 ## Deployment
 
-You can find the app live [here](https://cryptic-lake-58741.herokuapp.com/)
+You can find the front-end app live [here](https://cryptic-lake-58741.herokuapp.com/)
 
 ## Front-end repository
 
@@ -29,16 +20,10 @@ You can find the deployed back-end API [here live](https://rails-hotels-api.hero
 
 ## Built With
 
-- **JavaScript**
-- **Bootstrap**
-- **React 18.2**
-- **Redux Toolkit 1.8.1**
-- **React-Redux 8.0.1**
 - **Ruby 3.1.2**
 - **Rails 7**
 - **PostgreSQL**
 - **Visual Studio Code**
-
 
 ## Getting Started
 
@@ -52,27 +37,9 @@ You can find the deployed back-end API [here live](https://rails-hotels-api.hero
 
 #### Step 2:
 
-- Download all dependencies to use the Project
-
-```bash
-> yarn start
-or 
-> npm start`
-```
-
-#### Step 3:
-
-In the project directory, you can run:
-
 ```bash
 > bundle install
 > rails s
-```
-then open another terminal and type
-```bash
-> yarn start
-or 
-> npm start`
 ```
 ## Authors
 
